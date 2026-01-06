@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import discord
 from discord.ext import commands
+import os  # Importante para leer el token de Railway
 
 # Configuración de permisos (Intents)
 intents = discord.Intents.all()
@@ -21,8 +22,8 @@ async def on_member_join(member):
     canal = bot.get_channel(ID_BIENVENIDA)
     if canal:
         embed = discord.Embed(
-            title="✨ ¡UN NUEVO MIEMBRO HA LLEGADO!",
-            description=f"Bienvenido/a {member.mention} a **NEON-VAULT**.\n\n🚀 Eres el miembro número **{len(member.guild.members)}**.\n\nNo olvides leer las reglas y disfrutar de nuestros servicios.",
+            title="✨ ¡BIENVENIDO A NEON-VAULT!",
+            description=f"Hola {member.mention}, disfruta de nuestros servicios.\n\n🚀 Eres el miembro número **{len(member.guild.members)}**.",
             color=0x00ffff
         )
         if member.avatar:
@@ -39,7 +40,7 @@ async def on_member_remove(member):
     if canal:
         embed = discord.Embed(
             title="🚪 UN USUARIO HA SALIDO",
-            description=f"**{member.name}** ha abandonado la red.\nEsperamos volver a verte pronto.",
+            description=f"**{member.name}** ha abandonado la red.",
             color=0xff0000
         )
         if member.avatar:
@@ -48,60 +49,24 @@ async def on_member_remove(member):
         embed.set_image(url=LINK_GIF)
         await canal.send(embed=embed)
 
-# --- COMANDOS DE PRUEBA ---
+# --- COMANDOS ---
 @bot.command()
 async def test_bienvenida(ctx):
-    await ctx.message.delete()
     await on_member_join(ctx.author)
 
 @bot.command()
 async def test_despedida(ctx):
-    await ctx.message.delete()
     await on_member_remove(ctx.author)
 
-# --- COMANDO REGLAS ---
 @bot.command()
 async def reglas(ctx):
-    await ctx.message.delete()
-    texto = (
-        "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n"
-        "📜 **REGLAMENTO OFICIAL | NEON-VAULT**\n"
-        "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n\n"
-        "🚫 **PROHIBICIONES ESTATUTARIAS**\n"
-        "• **Spam & Flood:** Prohibido el envío masivo.\n"
-        "• **Toxicidad:** Cero tolerancia al acoso.\n\n"
-        "💳 **POLÍTICAS DE COMPRA**\n"
-        "• **Garantía:** Soporte técnico de 24 a 48 horas.\n"
-        "• **No Reembolsos:** Al ser productos digitales.\n\n"
-        "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n"
-        "**Cualquier infracción resultará en BANEO PERMANENTE.** 🔨"
-    )
-    await ctx.send(embed=discord.Embed(description=texto, color=0xff0000))
+    await ctx.send("📜 **REGLAS:** Sé respetuoso, no hagas spam y sigue las instrucciones de los canales.")
 
-# --- COMANDO MÉTODOS ---
 @bot.command()
 async def metodos(ctx):
-    await ctx.message.delete()
-    texto = (
-        "💡 **INFORMACIÓN SOBRE NUESTROS MÉTODOS**\n\n"
-        "Estrategias exclusivas y guías paso a paso.\n\n"
-        "✅ **Probados** | 🚀 **Rápidos** | 🛡️ **Seguros**\n\n"
-        "🛒 **¿QUIERES COMPRAR?**\n"
-        "Abre un ticket aquí: <#1457597657076731904>"
-    )
-    await ctx.send(embed=discord.Embed(description=texto, color=0x00ffff))
+    await ctx.send("💡 **MÉTODOS:** Revisa el canal <#1457597657076731904> para ver los servicios disponibles.")
 
-# --- COMANDO PRÓXIMAMENTE ---
-@bot.command()
-async def proximamente(ctx):
-    await ctx.message.delete()
-    texto = (
-        "🚀 **PRÓXIMAS ACTUALIZACIONES**\n"
-        "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n\n"
-        "🛠️ **EN DESARROLLO:**\n"
-        "• Nuevas Plantillas Web.\n"
-        "• Scripts de Automatización.\n"
-        "• Guías de Seguridad.\n\n"
-        "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
-    )
-    await ctx.send(embed=discord.Embed(description=texto, color=0xffff00
+# --- EJECUCIÓN SEGURA ---
+# Railway leerá el token de sus variables de entorno
+token = os.getenv("DISCORD_TOKEN")
+bot.run(token)
